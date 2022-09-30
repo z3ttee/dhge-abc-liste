@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     side: BorderSide(
                                       color: Colors.black12,
                                     ),
-                                    borderRadius: BorderRadius.all(Radius.circular(8))
+                                    borderRadius: BorderRadius.all(Radius.circular(4))
                                 ),
                                 child: Container(
                                   padding: const EdgeInsets.all(16),
