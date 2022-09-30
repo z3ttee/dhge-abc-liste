@@ -1,3 +1,4 @@
+import 'package:dhge_abc_liste/behaviours/pointerScrollBehaviour.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const MyHomePage(title: 'ABC Liste'),
+      scrollBehavior: PointerScrollBehaviour(),
     );
   }
 }
@@ -88,8 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Container(
                     width: 45,
-                    height: 45,
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(12),
                     child: Center(
                       child: Text(
                         widget.alphabet.characters.elementAt(index).toUpperCase(),
