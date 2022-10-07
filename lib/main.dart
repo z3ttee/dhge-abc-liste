@@ -1,6 +1,8 @@
 import 'package:dhge_abc_liste/behaviours/pointerScrollBehaviour.dart';
 import 'package:flutter/material.dart';
 
+import 'pages/ListOverviewPage.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -48,22 +50,11 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
-  // Create alphabet for rendering list
-  final String alphabet = "abcdefghijklmnopqrstuvwxyz";
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  void _routeToAddPage() {
-
-  }
-
-  void _routeToDetailsPage() {
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,71 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ListView.builder(
-          itemCount: widget.alphabet.characters.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 45,
-                    padding: const EdgeInsets.all(12),
-                    child: Center(
-                      child: Text(
-                        widget.alphabet.characters.elementAt(index).toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(child: Card(
-                                color: Colors.transparent,
-                                elevation: 0,
-                                shape: const RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: Colors.black12,
-                                    ),
-                                    borderRadius: BorderRadius.all(Radius.circular(4))
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.all(16),
-                                  child: const Text("Noch keine Wörter hinzugefügt"),
-                                ),
-                              ))
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              TextButton(
-                                onPressed: _routeToDetailsPage,
-                                child: const Text("Mehr anzeigen"),
-                              ),
-                              TextButton(
-                                onPressed: _routeToAddPage,
-                                child: const Text("Hinzufügen"),
-                              )
-                            ],
-                          )
-                        ],
-                      )
-                  ),
-                ],
-              ),
-            );
-          }
-      ),
+      body: const ListOverviewPageWidget(),
     );
   }
 }
