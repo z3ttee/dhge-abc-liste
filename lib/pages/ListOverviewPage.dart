@@ -1,6 +1,8 @@
 
 import 'package:dhge_abc_liste/cubits/ListCubit.dart';
+import 'package:dhge_abc_liste/dialogs/AddEntryDialog.dart';
 import 'package:dhge_abc_liste/models/ListEntry.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -103,6 +105,18 @@ class ListOverviewPageWidget extends StatelessWidget {
 class ListOverviewWidget extends StatelessWidget {
   const ListOverviewWidget({Key? key}) : super(key: key);
 
+  void _openAddEntryDialog(BuildContext context, String letter) async {
+    if(kDebugMode) {
+      print("openAddEntryDialog(): Opening dialog because user wants to add a new entry to the list.");
+    }
+
+    // Open the dialog
+    await showDialog(
+        context: context,
+        builder: (context) => AddEntryDialog(title: "Eintrag hinzufügen", letter: letter,)
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ListCubit, List<List<ListEntry>>>(
@@ -159,7 +173,7 @@ class ListOverviewWidget extends StatelessWidget {
                                   child: const Text("Mehr anzeigen"),
                                 ),
                                 TextButton(
-                                  onPressed: () => {},
+                                  onPressed: () => _openAddEntryDialog(context, ListCubit.ALPHABET.characters.elementAt(index)),
                                   child: const Text("Hinzufügen"),
                                 )
                               ],
