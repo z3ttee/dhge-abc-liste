@@ -1,14 +1,17 @@
 
+import 'package:dhge_abc_liste/models/ABCList.dart';
 import 'package:dhge_abc_liste/models/ListEntry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddEntryDialog extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final String title;
   final String letter;
+  final ABCList list;
 
-  AddEntryDialog({Key? key, required this.title, required this.letter}): super(key: key);
+  AddEntryDialog({Key? key, required this.title, required this.letter, required this.list}): super(key: key);
 
   void _dismiss(BuildContext context) {
     Navigator.of(context).pop();
@@ -31,6 +34,8 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
   void _saveEntry(BuildContext context) {
     _resetErrors();
 
+    // var abclist = Provider.of<ABCList>(context, listen: false);
+
     // Remove whitespaces at start and end
     wordController.text = wordController.text.trim();
     descriptionController.text = descriptionController.text.trim();
@@ -43,21 +48,21 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
       }
     }
 
-    if(descriptionController.text.isEmpty) {
-      _setDescriptionError("Bitte gib hier eine Beschreibung des Wortes ein");
-    } else {
+    if(descriptionController.text.isNotEmpty) {
       if(descriptionController.text.length < 3) {
-        _setWordError("Die Eingabe muss mindestens 3 Zeichen lang sein");
+        _setDescriptionError("Die Eingabe muss mindestens 3 Zeichen lang sein");
       }
     }
 
     // Dismiss the dialog if no error present and save the entry
-    if(_wordErrorMessage.isEmpty || _descriptionErrorMessage.isEmpty) {
+    if(_wordErrorMessage.isEmpty && _descriptionErrorMessage.isEmpty) {
       ListEntry entry = ListEntry(wordController.text, descriptionController.text);
 
       if(kDebugMode) {
         print("Saving new entry to list with values $entry");
       }
+
+      widget.list.addEntry(widget.letter, entry);
 
       widget._dismiss(context);
     }

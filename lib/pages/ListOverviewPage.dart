@@ -1,111 +1,15 @@
 
-import 'package:dhge_abc_liste/cubits/ListCubit.dart';
 import 'package:dhge_abc_liste/dialogs/AddEntryDialog.dart';
-import 'package:dhge_abc_liste/models/ListEntry.dart';
+import 'package:dhge_abc_liste/models/ABCList.dart';
+import 'package:dhge_abc_liste/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-class ListOverviewPageWidget extends StatelessWidget {
-  const ListOverviewPageWidget({Key? key}) : super(key: key);
-
-  void _routeToAddPage() {
-
-  }
-
-  void _routeToDetailsPage() {
-
-  }
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ListCubit(),
-      child: const ListOverviewWidget(),
-    );
-
-    return BlocProvider(
-      create: (_) => ListCubit(),
-      child: BlocBuilder(
-        builder: (context, state) {
-          return ListView.builder(
-              itemCount: ListCubit.ALPHABET.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 45,
-                        padding: const EdgeInsets.all(12),
-                        child: Center(
-                          child: Text(
-                            ListCubit.ALPHABET.characters.elementAt(index).toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 24,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(child: Card(
-                                    color: Colors.transparent,
-                                    elevation: 0,
-                                    shape: const RoundedRectangleBorder(
-                                        side: BorderSide(
-                                          color: Colors.black12,
-                                        ),
-                                        borderRadius: BorderRadius.all(Radius.circular(4))
-                                    ),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16),
-                                      child: const Text("Noch keine Wörter hinzugefügt"),
-                                    ),
-                                  ))
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    onPressed: _routeToDetailsPage,
-                                    child: const Text("Mehr anzeigen"),
-                                  ),
-                                  TextButton(
-                                    onPressed: _routeToAddPage,
-                                    child: const Text("Hinzufügen"),
-                                  )
-                                ],
-                              )
-                            ],
-                          )
-                      ),
-                    ],
-                  ),
-                );
-              }
-          );
-        },
-      ),
-    );
-  }
-
-}
+import 'package:provider/provider.dart';
 
 class ListOverviewWidget extends StatelessWidget {
   const ListOverviewWidget({Key? key}) : super(key: key);
 
-  void _openAddEntryDialog(BuildContext context, String letter) async {
+  void _openAddEntryDialog(BuildContext context, String letter, ABCList list) async {
     if(kDebugMode) {
       print("openAddEntryDialog(): Opening dialog because user wants to add a new entry to the list.");
     }
@@ -113,80 +17,110 @@ class ListOverviewWidget extends StatelessWidget {
     // Open the dialog
     await showDialog(
         context: context,
-        builder: (context) => AddEntryDialog(title: "Eintrag hinzufügen", letter: letter,)
+        builder: (context) => AddEntryDialog(title: "Eintrag hinzufügen", letter: letter, list: list,)
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ListCubit, List<List<ListEntry>>>(
-      builder: (context, state) {
-        return ListView.builder(
-            itemCount: ListCubit.ALPHABET.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 45,
-                      padding: const EdgeInsets.all(12),
-                      child: Center(
-                        child: Text(
-                          ListCubit.ALPHABET.characters.elementAt(index).toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 24,
+    // var list = ABCList();
+
+    return ChangeNotifierProvider(
+        create: (context) => ABCList(),
+        child: Consumer<ABCList>(
+          builder: (context, list, child) {
+            return ListView.builder(
+                itemCount: Constants.ALPHABET.length,
+                itemBuilder: (BuildContext context, int letterIndex) {
+                  var letter = Constants.ALPHABET.characters.elementAt(letterIndex);
+                  var letterEntries = list.getEntries(letter);
+                  var firstWord = "Noch keine Enträge vorhanden.";
+                  var hasMoreThanOne = letterEntries.length > 1;
+
+                  if(letterEntries.isNotEmpty) {
+                    var entry = letterEntries[0];
+                    firstWord = entry.title;
+                  }
+
+                  return Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 45,
+                          padding: const EdgeInsets.all(12),
+                          child: Center(
+                            child: Text(
+                              Constants.ALPHABET.characters.elementAt(letterIndex).toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 24,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(child: Card(
-                                  color: Colors.transparent,
-                                  elevation: 0,
-                                  shape: const RoundedRectangleBorder(
-                                      side: BorderSide(
-                                        color: Colors.black12,
-                                      ),
-                                      borderRadius: BorderRadius.all(Radius.circular(4))
+                        Expanded(
+                            child: Card(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              firstWord,
+                                              style: const TextStyle(
+                                                  fontSize: 18
+                                              ),
+                                            ),
+                                          ),
+                                          if(hasMoreThanOne)
+                                            Container(
+                                              padding: const EdgeInsets.only(left: 0),
+                                              child: Text(
+                                                "+ " + (letterEntries.length - 1).toString() + " weiter" + ((letterEntries.length - 1) != 1 ? "e" : "es"),
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black26
+                                                ),
+                                              ),
+                                            )
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(16),
-                                    child: const Text("Noch keine Wörter hinzugefügt"),
-                                  ),
-                                ))
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: () => {},
-                                  child: const Text("Mehr anzeigen"),
-                                ),
-                                TextButton(
-                                  onPressed: () => _openAddEntryDialog(context, ListCubit.ALPHABET.characters.elementAt(index)),
-                                  child: const Text("Hinzufügen"),
-                                )
-                              ],
+                                  Container(
+                                    padding: const EdgeInsets.only(top: 16),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        if(hasMoreThanOne)
+                                          TextButton(
+                                            onPressed: () => {},
+                                            child: const Text("Mehr anzeigen"),
+                                          ),
+                                        TextButton(
+                                          onPressed: () => _openAddEntryDialog(context, Constants.ALPHABET.characters.elementAt(letterIndex), list),
+                                          child: const Text("Hinzufügen"),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             )
-                          ],
                         )
+                      ],
                     ),
-                  ],
-                ),
-              );
-            }
-        );
-      },
+                  );
+                }
+            );
+          },
+        )
     );
   }
 
