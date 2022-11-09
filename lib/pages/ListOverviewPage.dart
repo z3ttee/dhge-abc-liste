@@ -1,6 +1,7 @@
 
 import 'package:dhge_abc_liste/dialogs/AddEntryDialog.dart';
 import 'package:dhge_abc_liste/models/ABCList.dart';
+import 'package:dhge_abc_liste/pages/WordOverviewPage.dart';
 import 'package:dhge_abc_liste/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +22,15 @@ class ListOverviewWidget extends StatelessWidget {
     );
   }
 
+  void routeToWordsPage(BuildContext context, ABCList list, String letter) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => WordOverviewWidget(
+      list: list,
+        letter: letter
+    )));
+  }
+
   @override
   Widget build(BuildContext context) {
-    // var list = ABCList();
-
     return ChangeNotifierProvider(
         create: (context) => ABCList(),
         child: Consumer<ABCList>(
@@ -62,56 +68,68 @@ class ListOverviewWidget extends StatelessWidget {
                         ),
                         Expanded(
                             child: Card(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Container(
-                                            child: Text(
-                                              firstWord,
-                                              style: const TextStyle(
-                                                  fontSize: 18
-                                              ),
-                                            ),
-                                          ),
-                                          if(hasMoreThanOne)
+                              elevation: 0,
+                              shape: const RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color: Colors.black12,
+                                  ),
+                                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
                                             Container(
-                                              padding: const EdgeInsets.only(left: 0),
                                               child: Text(
-                                                "+ " + (letterEntries.length - 1).toString() + " weiter" + ((letterEntries.length - 1) != 1 ? "e" : "es"),
+                                                firstWord,
                                                 style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black26
+                                                    fontSize: 18
                                                 ),
                                               ),
-                                            )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 16),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        if(hasMoreThanOne)
-                                          TextButton(
-                                            onPressed: () => {},
-                                            child: const Text("Mehr anzeigen"),
-                                          ),
-                                        TextButton(
-                                          onPressed: () => _openAddEntryDialog(context, Constants.ALPHABET.characters.elementAt(letterIndex), list),
-                                          child: const Text("Hinzufügen"),
+                                            ),
+                                            if(hasMoreThanOne)
+                                              Container(
+                                                padding: const EdgeInsets.only(left: 0),
+                                                child: Text(
+                                                  "+ " + (letterEntries.length - 1).toString() + " weiter" + ((letterEntries.length - 1) != 1 ? "e" : "es"),
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black26
+                                                  ),
+                                                ),
+                                              )
+                                          ],
                                         )
                                       ],
                                     ),
-                                  )
-                                ],
-                              ),
+                                    Container(
+                                      padding: const EdgeInsets.only(top: 16),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          if(hasMoreThanOne)
+                                            TextButton(
+                                              onPressed: () => {
+                                                routeToWordsPage(context, list, letter)
+                                              },
+                                              child: const Text("Mehr anzeigen"),
+                                            ),
+                                          TextButton(
+                                            onPressed: () => _openAddEntryDialog(context, Constants.ALPHABET.characters.elementAt(letterIndex), list),
+                                            child: const Text("Hinzufügen"),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
                             )
                         )
                       ],

@@ -15,6 +15,8 @@ class ABCList extends ChangeNotifier {
     ]
   };
 
+  final String title = "ABC Liste";
+
   Map<String, List<ListEntry>> getAllEntries() {
     return _entries;
   }
