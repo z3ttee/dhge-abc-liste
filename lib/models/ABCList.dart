@@ -29,31 +29,21 @@ class ABCList extends ChangeNotifier {
     return _entries[letter.toLowerCase()]?.values.toList() ?? [];
   }
 
-  void addEntry(String letter, ListEntry entry) {
+  void removeEntry(String letter, String entryId) {
     final Map<String, ListEntry> letterEntries = getEntries(letter);
+    letterEntries.remove(entryId);
 
     if (kDebugMode) {
-      print("Adding entry to letter $letter");
-      print("Letter $letter has ${letterEntries.length} entries already");
+      print("Removing entry '$entryId' from letter '$letter'. Letter has ${letterEntries.length} entries left");
     }
-
-    letterEntries[entry.uuid] = entry;
 
     _entries[letter.toLowerCase()] = letterEntries;
     notifyListeners();
   }
 
-  void removeEntry(String letter, String entryId) {
+  void setEntry(String letter, ListEntry entry) {
     final Map<String, ListEntry> letterEntries = getEntries(letter);
-
-    var entry = letterEntries.remove(entryId);
-
-    print(letterEntries.keys.toList());
-
-    if (kDebugMode) {
-      print("Removing entry '$entryId' from letter '$letter'. Letter has ${letterEntries.length} entries left");
-      print("Removed $entry");
-    }
+    letterEntries[entry.uuid] = entry;
 
     _entries[letter.toLowerCase()] = letterEntries;
     notifyListeners();

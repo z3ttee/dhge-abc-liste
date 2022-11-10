@@ -1,5 +1,6 @@
 
 import 'package:dhge_abc_liste/models/ABCList.dart';
+import 'package:dhge_abc_liste/models/ListEntry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,7 @@ class WordOverviewWidget extends StatelessWidget {
 
   const WordOverviewWidget({Key? key, required this.letter, required this.list}) : super(key: key);
 
-  void _openAddEntryDialog(BuildContext context, String letter, ABCList list) async {
+  void _openAddEntryDialog(BuildContext context, String letter, ABCList list, ListEntry? entry) async {
     if(kDebugMode) {
       print("openAddEntryDialog(): Opening dialog because user wants to add a new entry to the list.");
     }
@@ -20,7 +21,7 @@ class WordOverviewWidget extends StatelessWidget {
     // Open the dialog
     await showDialog(
         context: context,
-        builder: (context) => AddEntryDialog(title: "Eintrag hinzufügen", letter: letter, list: list,)
+        builder: (context) => AddEntryDialog(title: "Eintrag hinzufügen", letter: letter, list: list, entry: entry,)
     );
   }
 
@@ -50,7 +51,7 @@ class WordOverviewWidget extends StatelessWidget {
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  _openAddEntryDialog(context, letter, list);
+                  _openAddEntryDialog(context, letter, list, null);
                 },
                 child: const Icon(Icons.add),
               ),
@@ -94,7 +95,7 @@ class WordOverviewWidget extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     TextButton(
-                                      onPressed: () => {},
+                                      onPressed: () => _openAddEntryDialog(context, letter, list, wordEntry),
                                       child: const Text("Bearbeiten"),
                                     ),
                                     TextButton(

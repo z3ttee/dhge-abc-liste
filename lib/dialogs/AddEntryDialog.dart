@@ -3,15 +3,25 @@ import 'package:dhge_abc_liste/models/ABCList.dart';
 import 'package:dhge_abc_liste/models/ListEntry.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AddEntryDialog extends StatefulWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  // Required parameters
   final String title;
   final String letter;
   final ABCList list;
 
-  AddEntryDialog({Key? key, required this.title, required this.letter, required this.list}): super(key: key);
+  // Optional parameters
+  final ListEntry? entry;
+
+  AddEntryDialog({
+    Key? key,
+    required this.title,
+    required this.letter,
+    required this.list,
+    this.entry
+  }): super(key: key);
 
   void _dismiss(BuildContext context) {
     Navigator.of(context).pop();
@@ -25,6 +35,7 @@ class AddEntryDialog extends StatefulWidget {
 }
 
 class _AddEntryDialogState extends State<AddEntryDialog> {
+
   final TextEditingController wordController = TextEditingController(text: "");
   final TextEditingController descriptionController = TextEditingController(text: "");
 
@@ -33,8 +44,6 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
 
   void _saveEntry(BuildContext context) {
     _resetErrors();
-
-    // var abclist = Provider.of<ABCList>(context, listen: false);
 
     // Remove whitespaces at start and end
     wordController.text = wordController.text.trim();
@@ -56,13 +65,15 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
 
     // Dismiss the dialog if no error present and save the entry
     if(_wordErrorMessage.isEmpty && _descriptionErrorMessage.isEmpty) {
-      ListEntry entry = ListEntry(wordController.text, descriptionController.text);
+      ListEntry entry = widget.entry ?? ListEntry(wordController.text, descriptionController.text);
+      entry.title = wordController.text;
+      entry.description = descriptionController.text;
 
       if(kDebugMode) {
         print("Saving new entry to list with values $entry");
       }
 
-      widget.list.addEntry(widget.letter, entry);
+      widget.list.setEntry(widget.letter, entry);
 
       widget._dismiss(context);
     }
@@ -87,6 +98,13 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
     setState(() {
       _descriptionErrorMessage = error;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    wordController.text = widget.entry?.title ?? "";
+    descriptionController.text = widget.entry?.description ?? "";
   }
 
   @override
