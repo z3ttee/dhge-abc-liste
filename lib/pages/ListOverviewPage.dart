@@ -39,7 +39,7 @@ class ListOverviewWidget extends StatelessWidget {
                 itemCount: Constants.ALPHABET.length,
                 itemBuilder: (BuildContext context, int letterIndex) {
                   var letter = Constants.ALPHABET.characters.elementAt(letterIndex);
-                  var letterEntries = list.getEntries(letter);
+                  var letterEntries = list.getEntriesToList(letter);
                   var firstWord = "Noch keine Enträge vorhanden.";
                   var hasMoreThanOne = letterEntries.length > 1;
 

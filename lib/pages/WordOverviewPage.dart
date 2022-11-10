@@ -24,6 +24,10 @@ class WordOverviewWidget extends StatelessWidget {
     );
   }
 
+  void _removeEntryFromList(ABCList abclist, String entryId) {
+    abclist.removeEntry(letter, entryId);
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -53,10 +57,10 @@ class WordOverviewWidget extends StatelessWidget {
               body: ListView.builder(
                   itemCount: list.getEntries(letter).length,
                   itemBuilder: (BuildContext context, int wordIndex) {
-                    var wordEntry = list.getEntries(letter).elementAt(wordIndex);
+                    var wordEntry = list.getEntriesToList(letter).elementAt(wordIndex);
                     var description = wordEntry.description;
 
-                    if(description == null || description.isEmpty) {
+                    if(description.isEmpty) {
                       description = "Keine Beschreibung oder Definition angegeben.";
                     }
 
@@ -94,12 +98,12 @@ class WordOverviewWidget extends StatelessWidget {
                                       child: const Text("Bearbeiten"),
                                     ),
                                     TextButton(
-                                      onPressed: () => {},
+                                      onPressed: () => _removeEntryFromList(list, wordEntry.uuid),
                                       child: const Text("Löschen"),
                                     ),
                                   ],
-                                )
-                            )
+                                ),
+                            ),
                           ],
                         ),
                       ),
