@@ -41,7 +41,6 @@ class ListOverviewWidget extends StatelessWidget {
                   var letter = Constants.ALPHABET.characters.elementAt(letterIndex);
                   var letterEntries = list.getEntriesToList(letter);
                   var firstWord = "Noch keine Enträge vorhanden.";
-                  var hasMoreThanOne = letterEntries.length > 1;
 
                   if(letterEntries.isNotEmpty) {
                     var entry = letterEntries[0];
@@ -85,15 +84,13 @@ class ListOverviewWidget extends StatelessWidget {
                                       children: [
                                         Column(
                                           children: [
-                                            Container(
-                                              child: Text(
-                                                firstWord,
-                                                style: const TextStyle(
-                                                    fontSize: 18
-                                                ),
+                                            Text(
+                                              firstWord,
+                                              style: const TextStyle(
+                                                  fontSize: 18
                                               ),
                                             ),
-                                            if(hasMoreThanOne)
+                                            if(letterEntries.length > 1)
                                               Container(
                                                 padding: const EdgeInsets.only(left: 0),
                                                 child: Text(
@@ -113,7 +110,7 @@ class ListOverviewWidget extends StatelessWidget {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          if(hasMoreThanOne)
+                                          if(letterEntries.isNotEmpty)
                                             TextButton(
                                               onPressed: () => {
                                                 routeToWordsPage(context, list, letter)
