@@ -65,7 +65,7 @@ class _AddEntryDialogState extends State<AddEntryDialog> {
 
     // Dismiss the dialog if no error present and save the entry
     if(_wordErrorMessage.isEmpty && _descriptionErrorMessage.isEmpty) {
-      ListEntry entry = widget.entry ?? ListEntry(wordController.text, descriptionController.text);
+      ListEntry entry = widget.entry ?? ListEntry(title: wordController.text, description: descriptionController.text);
       entry.title = wordController.text;
       entry.description = descriptionController.text;
 

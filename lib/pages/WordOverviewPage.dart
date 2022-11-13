@@ -1,6 +1,7 @@
 
 import 'package:dhge_abc_liste/models/ABCList.dart';
 import 'package:dhge_abc_liste/models/ListEntry.dart';
+import 'package:dhge_abc_liste/widgets/word-card-widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -59,55 +60,11 @@ class WordOverviewWidget extends StatelessWidget {
                   itemCount: list.getEntries(letter).length,
                   itemBuilder: (BuildContext context, int wordIndex) {
                     var wordEntry = list.getEntriesToList(letter).elementAt(wordIndex);
-                    var description = wordEntry.description;
 
-                    if(description.isEmpty) {
-                      description = "Keine Beschreibung oder Definition angegeben.";
-                    }
-
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(wordEntry.title, style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold
-                            ),),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 24),
-                              child: Text("Beschreibung & Definition:", style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black26
-                              ),),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(description, style: const TextStyle(
-                                fontSize: 14,
-                              ),),
-                            ),
-                            Padding(
-                                padding: const EdgeInsets.only(top: 24),
-                                child: Row(
-                                  children: [
-                                    TextButton(
-                                      onPressed: () => _openAddEntryDialog(context, letter, list, wordEntry),
-                                      child: const Text("Bearbeiten"),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => _removeEntryFromList(list, wordEntry.uuid),
-                                      child: const Text("Löschen"),
-                                    ),
-                                  ],
-                                ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    return WordCardWidget(
+                        entry: wordEntry,
+                        onEditClicked: () => _openAddEntryDialog(context, letter, list, wordEntry),
+                        onDeleteClicked: () => _removeEntryFromList(list, wordEntry.uuid)
                     );
                   }
               ),

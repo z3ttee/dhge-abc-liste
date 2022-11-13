@@ -1,10 +1,19 @@
 
 import 'package:dhge_abc_liste/models/ListEntry.dart';
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
 class ABCList extends ChangeNotifier {
-  final Map<String, Map<String, ListEntry>> _entries = {};
-  final String title = "ABC Liste";
+  late Map<String, Map<String, ListEntry>> _entries;
+
+  late String title;
+  late String uuid;
+
+  ABCList({String? title, String? uuid, Map<String, Map<String, ListEntry>>? entries}) {
+    this.title = title ?? "ABC Liste";
+    this.uuid = uuid ?? const Uuid().v4();
+    _entries = entries ?? {};
+  }
 
   Map<String, Map<String, ListEntry>> getAllEntries() {
     return _entries;
@@ -47,6 +56,12 @@ class ABCList extends ChangeNotifier {
 
     _entries[letter.toLowerCase()] = letterEntries;
     notifyListeners();
+  }
+
+  @override
+  void notifyListeners() {
+    // Trigger internal from parent class
+    super.notifyListeners();
   }
 
 }
