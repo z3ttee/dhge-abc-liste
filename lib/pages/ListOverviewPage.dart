@@ -3,6 +3,7 @@ import 'package:dhge_abc_liste/dialogs/AddEntryDialog.dart';
 import 'package:dhge_abc_liste/models/ABCList.dart';
 import 'package:dhge_abc_liste/pages/WordOverviewPage.dart';
 import 'package:dhge_abc_liste/utils/constants.dart';
+import 'package:dhge_abc_liste/widgets/letter-card-widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,98 +40,12 @@ class ListOverviewWidget extends StatelessWidget {
                 itemCount: Constants.ALPHABET.length,
                 itemBuilder: (BuildContext context, int letterIndex) {
                   var letter = Constants.ALPHABET.characters.elementAt(letterIndex);
-                  var letterEntries = list.getEntriesToList(letter);
-                  var firstWord = "Noch keine Enträge vorhanden.";
 
-                  if(letterEntries.isNotEmpty) {
-                    var entry = letterEntries[0];
-                    firstWord = entry.title;
-                  }
-
-                  return Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 45,
-                          padding: const EdgeInsets.all(12),
-                          child: Center(
-                            child: Text(
-                              Constants.ALPHABET.characters.elementAt(letterIndex).toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 24,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                            child: Card(
-                              elevation: 0,
-                              shape: const RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    color: Colors.black12,
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              firstWord,
-                                              style: const TextStyle(
-                                                  fontSize: 18
-                                              ),
-                                            ),
-                                            if(letterEntries.length > 1)
-                                              Container(
-                                                padding: const EdgeInsets.only(left: 0),
-                                                child: Text(
-                                                  "+ " + (letterEntries.length - 1).toString() + " weiter" + ((letterEntries.length - 1) != 1 ? "e" : "es"),
-                                                  style: const TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.black26
-                                                  ),
-                                                ),
-                                              )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(top: 16),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          if(letterEntries.isNotEmpty)
-                                            TextButton(
-                                              onPressed: () => {
-                                                routeToWordsPage(context, list, letter)
-                                              },
-                                              child: const Text("Mehr anzeigen"),
-                                            ),
-                                          TextButton(
-                                            onPressed: () => _openAddEntryDialog(context, Constants.ALPHABET.characters.elementAt(letterIndex), list),
-                                            child: const Text("Hinzufügen"),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            )
-                        )
-                      ],
-                    ),
+                  return LetterCardWidget(
+                      letter: letter,
+                      entries:  list.getEntriesToList(letter),
+                      onNavigate: () => routeToWordsPage(context, list, letter),
+                      onAddClicked: () => _openAddEntryDialog(context, Constants.ALPHABET.characters.elementAt(letterIndex), list)
                   );
                 }
             );
